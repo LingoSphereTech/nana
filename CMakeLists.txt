@@ -27,12 +27,21 @@ project(nana VERSION      1.7.3
         HOMEPAGE_URL http://nanapro.org
         LANGUAGES CXX         )
 
+# Force MSVC runtime library to dynamic debug (/MDd) to match consuming projects.
+# Alternatives:
+#  - Use "MultiThreadedDebug" to force static debug (/MTd)
+#  - Use "MultiThreadedDLL" / "MultiThreaded" for release variants
+if (MSVC)
+    # Use the dynamic debug CRT so linking with projects built with /MDd succeeds.
+ #   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL" CACHE STRING "MSVC runtime library" FORCE)
+endif()
+
 #######################     Main setting of Nana targets, sources and installs    #####################
 
 add_library(nana)
 add_library(nana::nana ALIAS nana)
-target_compile_features(nana PUBLIC cxx_std_17)
-# set(CMAKE_CXX_STANDARD 17)
+target_compile_features(nana PUBLIC cxx_std_20)
+set(CMAKE_CXX_STANDARD 20)
 
 #  need after cxx_std_14 or cxx_std_17 ??
 target_compile_features(nana
